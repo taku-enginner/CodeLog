@@ -54,17 +54,3 @@
     </div>
   </div>
 </div>
-
-<!-- 👁️ トグルスクリプト（登録画面と共通） -->
-<script>
-  function togglePasswordVisibility(fieldId, button) {
-    const input = document.getElementById(fieldId);
-    const [eyeOpen, eyeClosed] = button.querySelectorAll(".eye");
-
-    const isHidden = input.type === "password";
-    input.type = isHidden ? "text" : "password";
-
-    eyeOpen.classList.toggle("hidden", !isHidden);
-    eyeClosed.classList.toggle("hidden", isHidden);
-  }
-</script>
