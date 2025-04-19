@@ -1,0 +1,70 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+  <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md space-y-6">
+    <h2 class="text-2xl font-bold text-center text-blue-600">ログイン</h2>
+
+    <%= form_with(model: resource, as: resource_name, url: session_path(resource_name), class: "space-y-4") do |f| %>
+      <!-- メールアドレス -->
+      <div>
+        <%= f.label :email, "メールアドレス", class: "block text-left font-semibold mb-1" %>
+        <%= f.email_field :email, autofocus: true, required: true,
+              class: "w-full border rounded-lg px-3 py-2" %>
+      </div>
+
+      <!-- パスワード -->
+      <div>
+        <%= f.label :password, "パスワード", class: "block text-left font-semibold mb-1" %>
+
+        <div class="relative">
+          <%= f.password_field :password, autocomplete: "current-password", required: true,
+                class: "w-full border rounded-lg px-3 py-2 pr-10", id: "login_password_field" %>
+
+          <button type="button"
+                  onclick="togglePasswordVisibility('login_password_field', this)"
+                  class="absolute top-1/2 -translate-y-1/2 right-3 text-gray-400 hover:text-gray-600 focus:outline-none">
+
+            <!-- 👁️ open（非表示スタート）-->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 eye open hidden" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+
+            <!-- 🙈 closed（初期表示）-->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 eye closed" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.972 9.972 0 012.223-3.592M6.423 6.423A9.96 9.96 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.966 9.966 0 01-4.338 5.168M3 3l18 18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ログインボタン -->
+      <div class="text-center">
+        <%= f.submit "ログイン", class: "w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg shadow" %>
+      </div>
+    <% end %>
+
+    <!-- フッターリンク -->
+    <div class="text-center text-sm">
+      <%= link_to "パスワードを忘れましたか？", new_password_path(resource_name), class: "text-blue-500 hover:underline" %><br>
+      <%= link_to "新規登録", new_registration_path(resource_name), class: "text-green-500 hover:underline" %>
+    </div>
+  </div>
+</div>
+
+<!-- 👁️ トグルスクリプト（登録画面と共通） -->
+<script>
+  function togglePasswordVisibility(fieldId, button) {
+    const input = document.getElementById(fieldId);
+    const [eyeOpen, eyeClosed] = button.querySelectorAll(".eye");
+
+    const isHidden = input.type === "password";
+    input.type = isHidden ? "text" : "password";
+
+    eyeOpen.classList.toggle("hidden", !isHidden);
+    eyeClosed.classList.toggle("hidden", isHidden);
+  }
+</script>

@@ -1,0 +1,18 @@
+<div class="h-screen overflow-hidden bg-gray-100 flex flex-col items-center justify-center text-gray-800">
+  <div class="bg-white shadow-md rounded-xl p-8 w-full max-w-md text-center space-y-6">
+    <h1 class="text-3xl font-bold text-blue-600">CodeLog</h1>
+
+    <% if user_signed_in? %>
+      <p class="text-lg">こんにちは、<span class="font-semibold"><%= current_user.email %></span> さん！</p>
+      <%= button_to "ログアウト", destroy_user_session_path, method: :delete,
+            class: "mt-4 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow" %>
+    <% else %>
+      <div class="flex justify-center space-x-4">
+        <%= link_to "ログイン", new_user_session_path,
+              class: "px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow" %>
+        <%= link_to "新規登録", new_user_registration_path,
+              class: "px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow" %>
+      </div>
+    <% end %>
+  </div>
+</div>
