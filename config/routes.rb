@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "pages/about"
   get "home/index"
   
   # current_userのリポジトリで十分だから、usersのネストの外に書いている
@@ -21,4 +22,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "home#index"
+
+  resources :tags, param: :name, only: [:show]
 end

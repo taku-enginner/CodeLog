@@ -19,6 +19,6 @@ class AnnotationsController < ApplicationController
   private
 
   def annotation_params
-    params.require(:annotation).permit(:repository_id, :file_path, :content)
+    params.require(:annotation).permit(:repository_id, :file_path, :content, :tag_list, :file_sha)
   end  
 end

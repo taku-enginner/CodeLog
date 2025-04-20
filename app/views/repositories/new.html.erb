@@ -1,10 +1,24 @@
-<h2 class="text-xl font-bold mb-4">リポジトリを登録</h2>
-
-<%= form_with model: @repository, url: repositories_path, local: true, data: {turbo: false} do |f| %>
-  <div class="mb-4">
-    <%= f.label :full_name, "GitHubリポジトリ名（例: taku-enginner/utamemo）" %>
-    <%= f.text_field :full_name, class: "w-full border px-4 py-2 rounded" %>
+<div class="max-w-xl mx-auto px-6 py-12 bg-white shadow-lg rounded-2xl my-6 space-y-6">
+  <div class="text-center">
+    <h2 class="text-3xl font-bold text-purple-700">リポジトリを登録しよう</h2>
+    <p class="text-gray-600 mt-2 text-sm">
+      自分のコードに<span class="font-semibold text-purple-700">思考の軌跡</span>を残しませんか？
+    </p>
   </div>
 
-  <%= f.submit "登録する", class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" %>
-<% end %>
+  <p class="text-gray-700 leading-relaxed text-sm bg-purple-50 rounded p-4 border border-purple-100">
+    GitHubリポジトリを登録すると、<strong class="text-purple-700">コードごとにメモ</strong>を残せるようになります。<br>
+    あなたの工夫や試行錯誤を、<span class="underline underline-offset-2">「見える化」して魅せるポートフォリオ</span>に。
+  </p>
+
+  <%= form_with model: @repository, url: repositories_path, local: true, data: { turbo: false } do |f| %>
+    <div class="mb-4">
+      <%= f.label :full_name, "GitHubリポジトリ名（例: taku-enginner/utamemo）",
+            class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :full_name,
+            class: "w-full border border-gray-300 px-4 py-2 rounded shadow-sm focus:ring focus:border-purple-400" %>
+    </div>
+
+    <%= f.submit "＋ 登録する", class: "bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-500 cursor-pointer transition w-full" %>
+  <% end %>
+</div>

@@ -10,22 +10,29 @@ class RepositoriesController < ApplicationController
   end
 
   def show
-    p "file_path: #{params}"
     @repository = current_user.repositories.find(params[:id])
     @file_tree = fetch_github_tree(@repository.full_name)
   
-    if params[:file_sha].present?
-      @selected_file_content = fetch_github_blob(@repository.full_name, params[:file_sha])
-      Rails.logger.debug "[FILE DEBUG] SHA: #{params[:file_sha]}"
-      Rails.logger.debug "[FILE DEBUG] Content length: #{@selected_file_content&.length}"
-    end
     @selected_file_path = params[:path]
+    file_sha = params[:file_sha]
+  
+    if file_sha.present?
+      begin
+        @selected_file_content = fetch_github_blob(@repository.full_name, file_sha)
+        Rails.logger.debug "[FILE DEBUG] SHA: #{file_sha}"
+        Rails.logger.debug "[FILE DEBUG] Content length: #{@selected_file_content&.length}"
+      rescue Octokit::NotFound => e
+        Rails.logger.warn "[FILE WARN] ファイルが存在しません: #{file_sha}"
+        @selected_file_content = nil
+        flash.now[:alert] = "このファイルは GitHub 上から削除された可能性があります。コメントのみ表示されます。"
+      end
+    end
+  
     @annotations = Annotation.where(
       repository: @repository,
-      file_path: params[:path] # 表示中のファイルのパス
-    )    
+      file_path: @selected_file_path
+    ).order(created_at: :desc)
   end
-  
   
 
   def new

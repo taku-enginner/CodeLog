@@ -1,16 +1,29 @@
-<!-- app/views/repositories/index.html.erb -->
+<div class="max-w-3xl mx-auto px-6 py-12 bg-white shadow-lg rounded-2xl my-8 space-y-6">
+  <div class="text-center">
+    <h2 class="text-3xl font-bold text-purple-700 mb-2">あなたのコードノート📘</h2>
+    <p class="text-sm text-gray-600">登録したリポジトリの中で、気づき・工夫・学びを残していきましょう。</p>
+  </div>
 
-<h2 class="text-2xl font-bold mb-6">登録済みリポジトリ一覧</h2>
-
-<% if @repositories.any? %>
-  <ul class="space-y-4">
-    <% @repositories.each do |repo| %>
-      <li class="p-4 bg-white shadow rounded border">
-        <h3 class="text-xl font-semibold"><%= link_to repo.full_name, repository_path(repo), class: "text-blue-600 hover:underline" %></h3>
-        <p class="text-gray-600 text-sm">登録日: <%= repo.created_at.strftime("%Y-%m-%d %H:%M") %></p>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p class="text-gray-600">まだリポジトリが登録されていません。</p>
-<% end %>
+  <% if @repositories.any? %>
+    <ul class="space-y-4">
+      <% @repositories.each do |repo| %>
+        <li class="p-4 bg-purple-50 border border-purple-100 rounded-lg shadow-sm hover:shadow-md transition">
+          <h3 class="text-lg font-semibold text-purple-800">
+            <%= link_to repo.full_name, repository_path(repo), class: "hover:underline" %>
+          </h3>
+          <p class="text-sm text-gray-500 mt-1">
+            登録日: <%= l(repo.created_at, format: :long) %>
+          </p>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="text-center text-gray-500 mt-6">
+      <p>まだリポジトリが登録されていません。</p>
+      <p class="mt-2">
+        <%= link_to "リポジトリを登録する", new_repository_path,
+              class: "inline-block px-4 py-2 mt-2 bg-purple-500 hover:bg-purple-600 text-white rounded shadow transition" %>
+      </p>
+    </div>
+  <% end %>
+</div>

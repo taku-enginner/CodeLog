@@ -1,0 +1,20 @@
+<div class="max-w-3xl mx-auto p-6">
+  <h2 class="text-xl font-bold mb-4">タグ: #<%= @tag.name %></h2>
+
+  <% @annotations.each do |annotation| %>
+    <div class="border-b pb-4 mb-4">
+      <%= link_to repository_path(annotation.repository, file_sha: annotation.file_sha, path: annotation.file_path),
+            class: "block hover:bg-gray-50 p-2 rounded transition" do %>
+        <p class="text-sm text-gray-700 mb-2">🗨️ <%= annotation.content %></p>
+        <div class="flex justify-between text-xs text-gray-500">
+          <span>投稿者: <%= annotation.user.email %></span>
+          <span><%= l(annotation.created_at, format: :short) %></span>
+        </div>
+        <div class="text-xs text-blue-600 mt-1">
+          📄 <%= annotation.file_path %>
+        </div>
+      <% end %>
+
+    </div>
+  <% end %>
+</div>

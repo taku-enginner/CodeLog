@@ -19,12 +19,13 @@
 
   </head>
 
-  <body class="h-full flex flex-col min-h-screen bg-gray-100 text-gray-800">
+  <body class="h-[100dvh] overflow-hidden flex flex-col">
     <!-- ヘッダー -->
-    <header class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
-      <%= link_to "MyApp", root_path, class: "text-xl font-bold text-purple-600 hover:underline" %>
+    <header class="h-16 bg-white shadow-md px-6 py-4 flex justify-between items-center flex-none">
+      <%= link_to "CodeLog", root_path, class: "text-xl font-bold text-purple-600 hover:underline" %>
 
       <nav class="space-x-4">
+        <%= link_to "このアプリについて", pages_about_path, class: "text-sm text-gray-600 hover:text-purple-600" %>
         <% if user_signed_in? %>
           <%= link_to "リポジトリ一覧", repositories_path, class: "text-gray-700 hover:text-purple-600" %>
           <%= link_to "＋ 登録", new_repository_path, class: "text-gray-700 hover:text-purple-600" %>
@@ -38,43 +39,30 @@
 
     <!-- Flashメッセージ -->
     <% flash.each do |type, message| %>
-      <div class="mx-auto max-w-3xl w-full px-4 mt-4">
+      <div class="mx-auto max-w-3xl w-full px-4 mt-4" id="flash-message">
         <div class="p-4 rounded text-white <%= type == "notice" ? 'bg-green-500' : 'bg-red-500' %>">
           <%= message %>
         </div>
       </div>
     <% end %>
 
+    <script>
+      function hideFlashMessage() {
+        const flash = document.getElementById("flash-message");
+        if (flash) {
+          setTimeout(() => {
+            flash.style.display = "none";
+          }, 2000)
+        }
+      }
+      document.addEventListener("DOMContentLoaded", hideFlashMessage);
+      document.addEventListener("turbo:load", hideFlashMessage);
+    </script>
+
     <!-- メインコンテンツ -->
-    <main class="flex-1 container mx-auto px-6 pt-8 pb-24">
+    <main class="flex-1 flex overflow-hidden">
       <%= yield %>
     </main>
-
-    <!-- 固定ボトムのフッター -->
-    <footer class="fixed bottom-0 left-0 w-full bg-white border-t shadow z-50">
-      <nav class="flex justify-around py-2 text-xs text-gray-600">
-        
-        <!-- 記録 -->
-        <%= link_to "#", class: "flex flex-col items-center hover:text-blue-600" do %>
-          <span class="text-xl">＋</span>
-          <span>記録</span>
-        <% end %>
-
-        <!-- グラフ -->
-        <%= link_to "#", class: "flex flex-col items-center hover:text-blue-600" do %>
-          <span class="text-xl font-bold">n∩</span> <!-- 遊び心あるアイコン風 -->
-          <span>グラフ</span>
-        <% end %>
-
-        <!-- 設定 -->
-        <%= link_to "#", class: "flex flex-col items-center hover:text-blue-600" do %>
-          <span class="text-xl">⟳</span> <!-- リロード風 or 歯車アイコンでもOK -->
-          <span>設定</span>
-        <% end %>
-
-      </nav>
-    </footer>
-
-
   </body>
+
 </html>
