@@ -6,4 +6,5 @@ class User < ApplicationRecord
 
   has_many :repositories, dependent: :destroy
   has_many :annotations, dependent: :destroy
+  has_many :annotation_likes, dependent: :destroy
 end

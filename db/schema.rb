@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_20_054601) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_20_073135) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "annotation_likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "annotation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["annotation_id"], name: "index_annotation_likes_on_annotation_id"
+    t.index ["user_id"], name: "index_annotation_likes_on_user_id"
+  end
 
   create_table "annotation_tags", force: :cascade do |t|
     t.bigint "annotation_id", null: false
@@ -32,6 +41,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_20_054601) do
     t.datetime "updated_at", null: false
     t.string "tags"
     t.string "file_sha"
+    t.integer "view_count", default: 0, null: false
     t.index ["repository_id"], name: "index_annotations_on_repository_id"
     t.index ["user_id"], name: "index_annotations_on_user_id"
   end
@@ -65,6 +75,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_20_054601) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "annotation_likes", "annotations"
+  add_foreign_key "annotation_likes", "users"
   add_foreign_key "annotation_tags", "annotations"
   add_foreign_key "annotation_tags", "tags"
   add_foreign_key "annotations", "repositories"

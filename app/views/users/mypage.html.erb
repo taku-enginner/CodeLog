@@ -1,0 +1,174 @@
+<div id="dashboard-root" class="max-w-7xl mx-auto px-6 py-10 opacity-0 translate-y-4 transition-all duration-700 ease-out">
+      
+  <div class="max-w-7xl mx-auto px-6 py-10">
+    <h1 class="text-2xl sm:text-3xl font-bold text-purple-700 text-center flex items-center justify-center gap-2 mb-10">
+      <span class="text-3xl">📊</span>
+      <%= current_user.email %> さんのダッシュボード
+    </h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div class="relative group p-6 rounded-xl shadow-md text-white bg-gradient-to-r from-pink-500 to-purple-500 transform transition hover:scale-105 hover:shadow-xl">
+            <div class="flex flex-col items-center justify-center">
+              <span class="text-4xl">❤️</span>
+              <p class="text-3xl font-bold mt-2"><%= @total_likes %></p>
+              <p class="text-sm mt-1">総いいね数</p>
+            </div>
+            <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-56 text-sm bg-gray-800 text-white px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 text-center">
+              他のユーザーからもらった「いいね」の合計数です
+            </div>
+          </div>
+
+          <div class="relative group p-6 rounded-xl shadow-md text-white bg-gradient-to-r from-blue-500 to-indigo-500 transform transition hover:scale-105 hover:shadow-xl">
+            <div class="flex flex-col items-center justify-center">
+              <span class="text-4xl">✏️</span>
+              <p class="text-3xl font-bold mt-2"><%= @recent_comments %></p>
+              <p class="text-sm mt-1">最近のコメント数</p>
+            </div>
+            <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-60 text-sm bg-gray-800 text-white px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 text-center">
+              過去7日間に投稿したコメントの数です
+            </div>
+          </div>
+
+          <div class="relative group p-6 rounded-xl shadow-md text-white bg-gradient-to-r from-yellow-400 to-pink-400 hover:shadow-xl hover:scale-105 transform transition">
+            <h3 class="text-md font-bold mb-3 flex items-center gap-2">🏷️ <span>トップタグ</span></h3>
+            <ul class="text-sm space-y-1">
+              <% @top_tags.each do |tag, count| %>
+                <li>#<%= tag %>（<%= count %>件）</li>
+              <% end %>
+            </ul>
+            <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-60 text-sm bg-gray-800 text-white px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 text-center">
+              最近よく使われたタグの上位3つです
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h3 class="text-lg font-bold text-gray-800 mb-2">🔥 最もいいねされたコメント</h3>
+          <% if @most_liked_comment.present? %>
+            <blockquote class="italic text-purple-700 border-l-4 border-purple-300 pl-4">“<%= @most_liked_comment.content %>”</blockquote>
+            <p class="text-xs text-gray-500 mt-2">❤️ <%= @most_liked_comment_likes %> いいね</p>
+          <% else %>
+            <p class="text-gray-500 text-sm">まだありません。</p>
+          <% end %>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h3 class="text-lg font-bold text-gray-800 mb-2">📁 最もコメントされたファイル</h3>
+          <% if @most_commented_file.present? %>
+            <p class="font-mono text-blue-600 break-all"><%= @most_commented_file %></p>
+            <p class="text-xs text-gray-500 mt-1">コメント数: <%= @most_commented_file_comments %> 件</p>
+          <% else %>
+            <p class="text-gray-500 text-sm">まだありません。</p>
+          <% end %>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h3 class="text-lg font-bold text-gray-800 mb-2">📅 最も活発な1週間</h3>
+          <p class="text-sm text-gray-700"><%= @most_active_week %>週間の活動</p>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="relative group p-6 rounded-xl shadow-md bg-white hover:shadow-xl hover:scale-105 transition min-h-[260px]">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">📊 最近の活動</h3>
+          <canvas id="activityChart" class="w-full h-64"></canvas>
+          <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-72 text-sm bg-gray-800 text-white px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 text-center">
+            過去1週間のコメント数の推移を表示します
+          </div>
+        </div>
+
+        <div class="relative group p-6 rounded-xl shadow-md bg-white hover:shadow-xl hover:scale-105 transition min-h-[260px]">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">🏷️ コメント種別の割合</h3>
+          <div class="h-[150px] w-full relative">
+            <canvas id="tagChart" class="absolute inset-0 w-full h-full"></canvas>
+          </div>
+          <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-72 text-sm bg-gray-800 text-white px-3 py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 text-center">
+            タグの出現割合から、どの種別のコメントが多いかを表示します
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("turbo:load", function () {
+    const ctx = document.getElementById('activityChart')?.getContext('2d');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['日', '月', '火', '水', '木', '金', '土'],
+          datasets: [{
+            label: '活動量',
+            data: <%= @weekly_activity_data.to_json %>,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderWidth: 2,
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false } },
+            y: { min: 0, grid: { color: '#eee' } }
+          }
+        }
+      });
+    }
+
+    const tagCtx = document.getElementById('tagChart')?.getContext('2d');
+    if (tagCtx) {
+      new Chart(tagCtx, {
+        type: 'doughnut',
+        data: {
+          labels: <%= @tag_pie_data.keys.to_json.html_safe %>,
+          datasets: [{
+            data: <%= @tag_pie_data.values.to_json.html_safe %>,
+            backgroundColor: ['#f87171', '#60a5fa', '#34d399', '#facc15', '#a78bfa', '#fb923c'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                color: '#333',
+                padding: 20,
+                boxWidth: 20,
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.raw;
+                  return `${label}: ${value}件`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("turbo:load", () => {
+    const root = document.getElementById("dashboard-root");
+    if (root) {
+      requestAnimationFrame(() => {
+        root.classList.remove("opacity-0", "translate-y-4");
+        root.classList.add("opacity-100", "translate-y-0");
+      });
+    }
+  });
+</script>

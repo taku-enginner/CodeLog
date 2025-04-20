@@ -1,5 +1,5 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-  <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md space-y-6">
+<div class="w-screen min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 px-4">
+  <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg space-y-6">
     <h2 class="text-2xl font-bold text-center text-blue-600">ログイン</h2>
 
     <%= form_with(model: resource, as: resource_name, url: session_path(resource_name), class: "space-y-4") do |f| %>
@@ -21,8 +21,7 @@
           <button type="button"
                   onclick="togglePasswordVisibility('login_password_field', this)"
                   class="absolute top-1/2 -translate-y-1/2 right-3 text-gray-400 hover:text-gray-600 focus:outline-none">
-
-            <!-- 👁️ open（非表示スタート）-->
+            <!-- 👁️ open -->
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 eye open hidden" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -30,8 +29,7 @@
               <path stroke-linecap="round" stroke-linejoin="round"
                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-
-            <!-- 🙈 closed（初期表示）-->
+            <!-- 🙈 closed -->
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 eye closed" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round"

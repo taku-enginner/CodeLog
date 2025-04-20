@@ -32,6 +32,11 @@ class RepositoriesController < ApplicationController
       repository: @repository,
       file_path: @selected_file_path
     ).order(created_at: :desc)
+
+    # 閲覧数をインクリメント
+    @annotations.each do |annotation|
+      annotation.increment!(:view_count)
+    end
   end
   
 

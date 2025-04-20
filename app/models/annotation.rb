@@ -3,6 +3,7 @@ class Annotation < ApplicationRecord
   belongs_to :user
   has_many :annotation_tags, dependent: :destroy
   has_many :tags, through: :annotation_tags
+  has_many :annotation_likes, dependent: :destroy
   
   def tag_list
     tags.pluck(:name)

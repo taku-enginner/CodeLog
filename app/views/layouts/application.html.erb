@@ -19,7 +19,7 @@
 
   </head>
 
-  <body class="h-[100dvh] overflow-hidden flex flex-col">
+  <body class="h-[100dvh] overflow-hidden flex flex-col bg-gradient-to-br from-gray-200 via-gray-100 to-white">
     <!-- ヘッダー -->
     <header class="h-16 bg-white shadow-md px-6 py-4 flex justify-between items-center flex-none">
       <%= link_to "CodeLog", root_path, class: "text-xl font-bold text-purple-600 hover:underline" %>
@@ -27,6 +27,7 @@
       <nav class="space-x-4">
         <%= link_to "このアプリについて", pages_about_path, class: "text-sm text-gray-600 hover:text-purple-600" %>
         <% if user_signed_in? %>
+          <%= link_to "マイページ", mypage_user_path(current_user.id), class: "text-gray-700 hover:text-purple-600" %>
           <%= link_to "リポジトリ一覧", repositories_path, class: "text-gray-700 hover:text-purple-600" %>
           <%= link_to "＋ 登録", new_repository_path, class: "text-gray-700 hover:text-purple-600" %>
           <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: "text-red-500 hover:text-red-600" %>

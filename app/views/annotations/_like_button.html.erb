@@ -1,0 +1,18 @@
+<!-- app/views/annotations/_like_button.html.erb -->
+<div id="like_button_<%= annotation.id %>">
+  <% if annotation.annotation_likes.exists?(user_id: current_user.id) %>
+    <%= button_to annotation_annotation_like_path(annotation, annotation.annotation_likes.find_by(user: current_user)),
+                  method: :delete,
+                  data: { turbo_method: :delete },
+                  class: "text-sm text-red-600" do %>
+      ❤️ <%= annotation.annotation_likes.count %>
+    <% end %>
+  <% else %>
+    <%= button_to annotation_annotation_likes_path(annotation),
+                  method: :post,
+                  data: { turbo_method: :post },
+                  class: "text-sm text-gray-600" do %>
+      🤍 <%= annotation.annotation_likes.count %>
+    <% end %>
+  <% end %>
+</div>

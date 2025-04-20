@@ -13,7 +13,7 @@
       <% language = prism_language_class(@selected_file_path) %>
       <div class="overflow-x-auto rounded-lg">
         <pre class="language-<%= language %> line-numbers">
-  <code><%= html_escape(@selected_file_content) %></code></pre>
+<code><%= html_escape(@selected_file_content) %></code></pre>
       </div>
     <% else %>
       <div class="p-4 bg-yellow-100 text-yellow-800 rounded shadow text-sm">
@@ -46,6 +46,7 @@
     <div id="annotation-list" class="space-y-4 mt-6">
       <% @annotations.each do |annotation| %>
         <div class="border-b pb-2">
+        <div class="flex flex-row justify-between items-center">
           <% if annotation.tags.any? %>
             <div class="text-xs text-gray-500 mb-1 space-x-1">
               <% annotation.tags.each do |tag| %>
@@ -53,20 +54,34 @@
               <% end %>
             </div>
           <% end %>
+          <% if annotation.user_id == current_user.id %>
+            <%= button_to "削除", annotation_path(annotation),
+                  method: :delete,
+                  data: { confirm: "削除してもよいですか？" },
+                  class: "text-xs bg-red-100 text-red-600 px-2 py-1 rounded hover:bg-red-200" %>
+          <% end %>
+        </div>
 
           <div class="bg-gray-50 px-3 py-2 rounded shadow-sm">
+            <%= render partial: "annotations/like_button", locals: { annotation: annotation } %>
+
             <div class="flex items-start gap-2 text-sm text-purple-800 break-words break-all whitespace-pre-wrap">
               <span class="mt-[2px]">🗨️</span>
               <p class="flex-1"><%= annotation.content %></p>
             </div>
             <div class="flex justify-between items-center mt-2 text-xs text-gray-500">
-              <% if annotation.user_id == current_user.id %>
-                <%= button_to "削除", annotation_path(annotation),
-                      method: :delete,
-                      data: { confirm: "削除してもよいですか？" },
-                      class: "text-xs bg-red-100 text-red-600 px-2 py-1 rounded hover:bg-red-200" %>
-              <% end %>
-              <div><%= annotation.user.email %> ・ <%= l(annotation.created_at, format: :short) %></div>
+              <!-- メタ情報 -->
+              <div class="flex justify-between items-center mt-2 text-xs text-gray-500">
+                <div>
+                  <%= annotation.user.email %> ・ <%= l(annotation.created_at, format: :short) %>
+                </div>
+                <div class="flex items-center gap-1">
+                  <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 3C5 3 1.73 7.11 1 10c.73 2.89 4 7 9 7s8.27-4.11 9-7c-.73-2.89-4-7-9-7zm0 12a5 5 0 110-10 5 5 0 010 10z"/>
+                  </svg>
+                  <span class="text-gray-600"><%= annotation.view_count || 0 %></span>
+                </div>
+              </div> 
             </div>
           </div>
         </div>
