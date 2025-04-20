@@ -1,18 +1,18 @@
 <div class="mx-auto max-w-screen-xl h-[calc(100vh-80px)] flex flex-col">
-  <!-- 上段: ファイル構成 + コード -->
+  <!-- 上段: ファイル構成 + コード表示 -->
   <div class="flex h-[75vh] flex-none overflow-hidden">
-    <!-- 左: ファイルツリー -->
+    <!-- ファイルツリー -->
     <aside class="w-64 min-w-[12rem] max-w-[16rem] bg-white border-r overflow-y-auto p-4 break-words">
       <h3 class="text-lg font-bold mb-2">ファイル構成</h3>
       <%= render_tree(build_nested_tree(@file_tree), @repository) %>
     </aside>
 
-
-    <!-- 中央: コード表示 -->
+    <!-- コード表示エリア -->
     <main class="flex-1 overflow-auto p-6">
       <% language = prism_language_class(@selected_file_path) %>
       <div class="overflow-x-auto rounded-lg">
-        <pre class="language-<%= language %> line-numbers"><code><%= html_escape(@selected_file_content) %></code></pre>
+        <pre class="language-<%= language %> line-numbers">
+<code><%= html_escape(@selected_file_content) %></code></pre>
       </div>
     </main>
   </div>
@@ -20,30 +20,30 @@
   <!-- 下段: コメント欄 -->
   <section class="bg-gray-50 border-t p-4 pb-28">
     <h3 class="text-md font-semibold mb-2">コメント</h3>
-    <div id="annotation-list" class="space-y-4 mb-4">
+
+    <!-- コメントフォーム -->
     <%= form_with model: Annotation.new, url: annotations_path, local: true do |f| %>
       <%= f.hidden_field :repository_id, value: @repository.id %>
       <%= f.hidden_field :file_path, value: @selected_file_path %>
       <%= f.text_area :content, rows: 3, placeholder: "このファイルへのコメントを書く…", class: "w-full text-base p-3 border rounded resize-y shadow-sm" %>
       <%= f.submit "投稿", class: "mt-2 px-4 py-1 bg-blue-500 text-white rounded" %>
     <% end %>
+
+    <!-- コメント一覧 -->
+    <div id="annotation-list" class="space-y-4 mt-4">
       <% @annotations.each do |annotation| %>
         <div class="border-b pb-2">
-          <!-- 上段：ユーザー名 + 投稿日時（右寄せ） -->
           <div class="flex justify-end text-xs text-gray-500 gap-2">
             <span><%= annotation.user.email %></span>
             <span><%= l(annotation.created_at, format: :short) %></span>
           </div>
-
-          <!-- 下段：コメント本文 + 削除ボタン -->
           <div class="flex items-center gap-2 mt-1 text-purple-700 text-sm">
             🗨️ <%= annotation.content %>
-
             <% if annotation.user_id == current_user.id %>
               <%= button_to "削除", annotation_path(annotation),
-                method: :delete,
-                data: { confirm: "削除してもよいですか？" },
-                class: "text-xs bg-red-100 text-red-600 px-2 py-1 rounded hover:bg-red-200" %>
+                    method: :delete,
+                    data: { confirm: "削除してもよいですか？" },
+                    class: "text-xs bg-red-100 text-red-600 px-2 py-1 rounded hover:bg-red-200" %>
             <% end %>
           </div>
         </div>
@@ -51,3 +51,36 @@
     </div>
   </section>
 </div>
+
+<<li>
+  <button class="toggle-folder font-semibold text-gray-700 hover:underline">
+    📁 フォルダ名
+  </button>
+
+  <div class="pl-4 mt-1 hidden folder-contents">
+    <ul>
+      <li>📄 子ファイル1</li>
+      <li>📄 子ファイル2</li>
+    </ul>
+  </div>
+</li>
+<script>
+  function bindFolderToggles() {
+    document.querySelectorAll(".toggle-folder").forEach(button => {
+      // すでにバインド済みならスキップ
+      if (button.dataset.bound === "true") return;
+
+      button.addEventListener("click", () => {
+        const content = button.nextElementSibling;
+        if (content) {
+          content.classList.toggle("hidden");
+        }
+      });
+
+      button.dataset.bound = "true"; // バインド済みマーク
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", bindFolderToggles);
+  document.addEventListener("turbo:load", bindFolderToggles);
+</script>

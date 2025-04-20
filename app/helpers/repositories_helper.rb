@@ -30,38 +30,36 @@ module RepositoriesHelper
   # 再帰的にツリー表示を描画（Stimulus対応）
   def render_tree(tree, repository, parent_path = "")
     content_tag :ul, class: "pl-4 border-l text-sm space-y-1" do
-      # フォルダ → ファイル順に並び替え（任意）
       folders = tree.select { |_, v| v[:type] == "tree" }.sort_by(&:first)
       files   = tree.select { |_, v| v[:type] == "blob" }.sort_by(&:first)
       sorted_tree = folders + files
-
+  
       sorted_tree.map do |name, value|
         full_path = [parent_path, name].reject(&:blank?).join("/")
-
+  
         case value[:type]
         when "blob"
-          # ファイルリンク
-          link = link_to name,
-                         repository_path(repository, file_sha: value[:sha], path: value[:path]),
-                         class: "text-blue-600 hover:underline"
-          content_tag(:li, "📄 #{link}".html_safe)
-
+          # ファイル
+          content_tag(:li) do
+            link_to "📄 #{name}",
+                    repository_path(repository, file_sha: value[:sha], path: value[:path]),
+                    class: "text-blue-600 hover:underline"
+          end
+  
         when "tree"
-          # フォルダ（トグル可能）
-          content_tag(:li, data: { controller: "toggle" }) do
+          # フォルダ（Vanilla JS 用クラス）
+          content_tag(:li) do
             button = content_tag(:button, "📁 #{name}",
-              class: "font-semibold text-gray-700 hover:underline",
-              data: { action: "click->toggle#toggle" })
-          
-            nested = content_tag(:div, class: "pl-4 mt-1 hidden", data: { toggle_target: "content" }) do
+              class: "toggle-folder font-semibold text-gray-700 hover:underline")
+  
+            nested = content_tag(:div, class: "pl-4 mt-1 hidden folder-contents") do
               render_tree(value[:children], repository, full_path)
             end
-          
+  
             button + nested
           end
-          
         end
       end.join.html_safe
     end
-  end
+  end  
 end
