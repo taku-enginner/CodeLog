@@ -1,0 +1,10 @@
+<h2 class="text-xl font-bold mb-4">リポジトリを登録</h2>
+
+<%= form_with model: @repository, url: repositories_path, local: true, data: {turbo: false} do |f| %>
+  <div class="mb-4">
+    <%= f.label :full_name, "GitHubリポジトリ名（例: taku-enginner/utamemo）" %>
+    <%= f.text_field :full_name, class: "w-full border px-4 py-2 rounded" %>
+  </div>
+
+  <%= f.submit "登録する", class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" %>
+<% end %>

@@ -1,5 +1,13 @@
 Rails.application.routes.draw do
   get "home/index"
+  
+  # current_userのリポジトリで十分だから、usersのネストの外に書いている
+  resources :repositories do
+    get :file_search_suggestions, on: :member
+  end
+
+  resources :annotations, only: [:create, :destroy]
+
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
