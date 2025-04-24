@@ -3,7 +3,7 @@
 # Gemfile 主要追加予定
 - devise
 - tailwindcss-rails
-- view_component (optional)
+- view_component (optional) 
 
 # Models
 
